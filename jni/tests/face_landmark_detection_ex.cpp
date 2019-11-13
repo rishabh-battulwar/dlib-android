@@ -60,20 +60,20 @@ int main(int argc, char** argv) {
       cout << "Could not open or find the image" << std::endl;
       return -1;
     }
-    long t0 = cv::getTickCount();
 
     // Convert mat to dlib's bgr pixel
     dlib::cv_image<dlib::bgr_pixel> img(inputImage);
     // Start detecting
     std::vector<rectangle> dets = detector(img);
+    long t0 = cv::getTickCount();
     std::vector<full_object_detection> shapes;
     for (unsigned long j = 0; j < dets.size(); ++j) {
       full_object_detection shape = sp(img, dets[j]);
-      cout << "number of parts: " << shape.num_parts() << endl;
-      int x = shape.part(0).x();
-      int y = shape.part(0).y();
-      cout << "pixel position  0 index, x: " << x << endl;
-      cout << "pixel position  0 index, y: " << y << endl;
+      // cout << "number of parts: " << shape.num_parts() << endl;
+      // int x = shape.part(0).x();
+      // int y = shape.part(0).y();
+      // cout << "pixel position  0 index, x: " << x << endl;
+      // cout << "pixel position  0 index, y: " << y << endl;
       // If input is lena.bmp, 0 index is supposed to be (109, 135)
       shapes.push_back(shape);
     }

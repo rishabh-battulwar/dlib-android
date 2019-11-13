@@ -66,7 +66,7 @@ def parse_args():
 def ndk_build(args):
     jobs = str(args.jobs)
     isDebug = '1' if args.debug else '0'
-    build_cmd = ['ndk-build',
+    build_cmd = ['/Users/rishabhbattulwar/workspace/loom-git/android-tools/android-ndk-r17c/ndk-build',
                  '-j' + jobs,
                  'NDK_LOG=1',
                  'NDK_DEBUG=' + isDebug,
@@ -82,7 +82,7 @@ def ndk_build(args):
 
 
 def ndk_clean():
-    subprocess.call(['ndk-build', 'clean'])
+    subprocess.call(['/Users/rishabhbattulwar/workspace/loom-git/android-tools/android-ndk-r17c/ndk-build', 'clean'])
 
 
 def setDeviceABI():
@@ -101,6 +101,7 @@ def setDeviceABI():
 
 def test():
     global DEVICE_ABI
+
     # Test max_cost_assignment_ex daemon example
     print '----max_cost_assignment_ex daemon test'
     print '----Push svm_ex to phone device'
@@ -133,6 +134,32 @@ def test():
     print '----Execute /data/local/tmp/face_lanmark'
     subprocess.call(['adb', 'shell', './data/local/tmp/face_landmark',
                     '/data/local/tmp/shape_predictor_68_face_landmarks.dat', '/data/local/tmp/lena.bmp'])
+
+    print '\n\n'
+    print 'Test face detection'
+    # # Uncomment the following 2 lines if Test Face landmark is turned off
+    # subprocess.call(['adb', 'push', srcFolder, '/data/local/tmp'])
+    # srcFolder = os.path.join('data', 'shape_predictor_68_face_landmarks.dat')
+    srcFolder = os.path.join('data', 'lena.bmp')
+    subprocess.call(['adb', 'push', srcFolder, '/data/local/tmp'])
+    srcFolder = os.path.join('libs', DEVICE_ABI, 'face_detection')
+    subprocess.call(['adb', 'push', srcFolder, '/data/local/tmp'])
+    print '----Execute /data/local/tmp/face_detection'
+    subprocess.call(['adb', 'shell', './data/local/tmp/face_detection', '/data/local/tmp/lena.bmp', '/data/local/tmp/shape_predictor_68_face_landmarks.dat'])
+    subprocess.call(['adb', 'pull', '/data/local/tmp/detector_stats.txt', '.'])
+
+    # print '\n\n'
+    # print 'Test face detection on video'
+    # # srcFolder = os.path.join('data', 'shape_predictor_68_face_landmarks.dat')
+    # # subprocess.call(['adb', 'push', srcFolder, '/data/local/tmp'])
+    # # srcFolder = os.path.join('data', 'video_ex.mov')
+    # # subprocess.call(['adb', 'push', srcFolder, '/data/local/tmp'])
+    # # subprocess.call(['adb', 'shell', 'mkdir', '/data/local/tmp/video_ex_img_seq'])
+    # # subprocess.call(['adb', 'push', 'data/video_ex_img_seq/*.bmp', '/data/local/tmp/video_ex_img_seq'])
+    # srcFolder = os.path.join('libs', DEVICE_ABI, 'video_face_detection')
+    # subprocess.call(['adb', 'push', srcFolder, '/data/local/tmp'])
+    # print '----Execute /data/local/tmp/video_face_detection'
+    # subprocess.call(['adb', 'shell', './data/local/tmp/video_face_detection', '/data/local/tmp/video_ex_img_seq', '/data/local/tmp/shape_predictor_68_face_landmarks.dat'])
 
 
 def copytree(src, dst, symlinks=False, ignore=None):
@@ -170,7 +197,7 @@ def test_cmake():
     ABI = 'arm64-v8a'
     # ABI = 'x86'
     # TODO
-    NDK_PATH = '/home/darrenl/tools/android-ndk-r10e'
+    NDK_PATH = '/Users/rishabhbattulwar/workspace/loom-git/android-tools/android-ndk-r17c'
     cmake_cmd = cmake_cmd + ['-DCMAKE_SYSTEM_NAME=Android', '-DCMAKE_SYSTEM_VERSION=21',
                                 '-DCMAKE_ANDROID_ARCH_ABI=' + ABI, '-DCMAKE_ANDROID_STL_TYPE=gnustl_static',
                                 '-DCMAKE_ANDROID_NDK=' + NDK_PATH]
